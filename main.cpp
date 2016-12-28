@@ -1,127 +1,52 @@
 #include <iostream>
+#define tipDate int
 
 using namespace std;
 
 struct nod
 {
     int info;
-    nod* succ;
-    nod* pred;
+    nod *urm;
 };
 
-struct lista
-{
-    unsigned int lungime;
-    nod* prim;
-    nod* ultim;
-    nod* stg;
-    nod* drp;
-};
+nod *L;
 
-void initializeaza (lista& L)
-{
-    L.stg=new nod;
-    L.drp=new nod;
-    L.stg->succ=L.drp;
-    L.stg->pred=NULL;
-    L.drp->pred=L.stg;
-    L.drp->succ=NULL;
-    L.ultim=NULL;
-    L.prim=NULL;
-    L.lungime=0;
-}
 
-void adauga (lista& L, int e)
+void citesteListaSimpla(nod *&L)
 {
-    if (L.lungime==0)
+    nod *p;
+    unsigned int nrElemente;
+    cout<<"Dati numarul de elemente: ";
+    cin>>nrElemente;
+
+    tipDate element;
+    L=NULL;
+    for (unsigned int i=1; i<=nrElemente; i++)
     {
-        L.ultim=new nod;
-        L.ultim->info=e;
-        L.ultim->succ=L.drp;
-        L.ultim->pred=L.stg;
-        L.drp->pred=L.ultim;
-        L.stg->succ=L.ultim;
-        L.prim=L.ultim;
-    }
-    else
-    {
-        nod* p;
+        cout<<"Dati elementul al "<<i<<"-lea: ";
+        cin>>element;
         p=new nod;
-        p->info=e;
-        p->succ=L.drp;
-        p->pred=L.ultim;
-        L.ultim->succ=p;
-        L.drp->pred=p;
-        L.ultim=p;
+        p->info=element;
+        p->urm=L;
+        L=p;
     }
-    L.lungime++;
 }
 
-void sterge(nod* p)
+void afiseazaListaSimpla(nod* L)
 {
-    nod *q, *r;
-    q=p->pred;
-    r=p->succ;
-    q->succ=r;
-    r->pred=q;
-    delete p;
-}
-
-void citeste (lista& L)
+    nod *p;
+    cout<<'\n';
+    p=L;
+    while (p!=NULL)
     {
-        unsigned int n;
-        int x;
-        unsigned int i;
-        cout<<"Dati nr. de elemente: ";
-        cin>>n;
-        initializeaza(L);
-        for (i=1; i<=n; i++)
-        {
-            cout<<"Dati elememtul al "<<i<<" lea ";
-            cin>>x;
-            adauga(L,x);
-        }
+        cout<<p->info<<" ";
+        p=p->urm;
     }
-
-void afiseaza (lista L)
-{
-    nod*p;
-    p=L.prim;
-    while (p!=L.drp)
-    {
-        cout<<p->info<<",";
-        p=p->succ;
-    }
-    cout<<endl;
 }
-
-void eliminaNegative (lista &L)
-{
-    nod *p, *q, *r;;
-    p=L.prim;
-    while (p!=L.drp)
-    {
-        q=p->succ;;
-        if (p->info<0)
-        {
-            sterge(p);
-            L.lungime--;
-        }
-        p=q->succ;
-    }
-    L.prim=L.stg->succ;
-    L.ultim=L.drp->pred;
-}
-
 int main()
 {
-    lista L;
-    citeste(L);
-    cout<<"Lista inlantuita: ";
-    afiseaza(L);
-    eliminaNegative(L);
-    cout<<"Lista finala: ";
-    afiseaza(L);
+    citesteListaSimpla(L);
 
-        return 0;
+    afiseazaListaSimpla(L);
+    return 0;
 }
